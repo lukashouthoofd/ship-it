@@ -64,3 +64,5 @@ Removes the hook, the logon launcher, and stops the watcher.
 MIT
 
 > Merge test: merging this PR should flash SHIP IIIIITTTT.
+
+Merge test 2.
