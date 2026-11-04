@@ -31,7 +31,9 @@ Preview the overlay without merging anything:
 powershell -NoProfile -STA -ExecutionPolicy Bypass -File shipit.ps1
 ```
 
-Test the real thing: open a pull request in this repo and merge it. Within about 30 seconds the overlay should hit your screen. `watch.log` shows what the watcher saw; a `FIRE` line means it triggered.
+Test the real thing: open a pull request in this repo and merge it. Within about 30 seconds the overlay should hit your screen. `watch.log` shows what the watcher saw; a `FIRE` line means it triggered, followed by `overlay exit 0`. `shipit.log` records every overlay run (screens it covered, skips, errors).
+
+The overlay must be started by `launch.js` (or from a shell), never as a detached process: Windows PowerShell started without a console exits without running the script, which is why it once showed nothing.
 
 ## Add a sound
 
@@ -39,7 +41,7 @@ Drop an MP3 named `shipit.mp3` next to `shipit.ps1`. It plays with the overlay, 
 
 ## Tweak it
 
-Everything is in `shipit.ps1`: the text (`$text`), colors, font, and duration (`$total`).
+Everything is in `shipit.ps1`: the text and timing in the `[ShipItOverlay]::Run(...)` call, colors and font in `OnPaint`.
 
 ## Uninstall
 
@@ -52,6 +54,7 @@ Removes the hook, the logon launcher, and stops the watcher.
 ## Files
 
 - `shipit.ps1`: the overlay (click-through, never steals focus, one at a time)
+- `launch.js`: starts the overlay correctly (hidden console, survives the caller exiting)
 - `hook.js`: Claude Code `PostToolUse` hook
 - `watch.js`: GitHub merge watcher
 - `install.js` / `uninstall.js`: set up and remove everything

@@ -2,7 +2,8 @@
 // wherever the merge happened (web button, auto-merge, cloud session, other machine).
 // GitHub's search index lags by up to a minute, so it also reads the PR lists of your
 // most recently pushed repos, which update immediately.
-const { spawn, execFile } = require('child_process')
+const { execFile } = require('child_process')
+const { runOverlay } = require('./launch')
 const fs = require('fs')
 const path = require('path')
 
@@ -24,8 +25,8 @@ function gh(args) {
 
 function fire() {
   log('FIRE')
-  spawn('powershell.exe', ['-NoProfile', '-STA', '-WindowStyle', 'Hidden', '-ExecutionPolicy', 'Bypass',
-    '-File', path.join(__dirname, 'shipit.ps1')], { detached: true, stdio: 'ignore', windowsHide: true }).unref()
+  // not detached: a console-less (detached) powershell exits without running; see launch.js
+  runOverlay((err, code) => log(err ? `overlay spawn error: ${err.message}` : `overlay exit ${code}`))
 }
 
 async function mergedUrls() {
